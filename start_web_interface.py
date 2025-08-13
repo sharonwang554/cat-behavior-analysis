@@ -35,7 +35,7 @@ def main():
     print("\n📁 Directory structure ready")
     print("📹 Place your cat videos in the 'input_videos/' folder")
     print("🌐 Starting web server...")
-    print("📱 Access the interface at: http://localhost:5001")
+    print("📱 Access the interface at: http://localhost:5002")
     print("\n" + "=" * 50)
 
     # Start the web application

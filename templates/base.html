@@ -394,6 +394,20 @@
         window.location.href = "/download/" + filename;
       }
 
+      function showLoadingSpinner() {
+        const loadingDiv = document.getElementById("loadingDiv");
+        if (loadingDiv) {
+          loadingDiv.style.display = "block";
+        }
+      }
+
+      function hideLoadingSpinner() {
+        const loadingDiv = document.getElementById("loadingDiv");
+        if (loadingDiv) {
+          loadingDiv.style.display = "none";
+        }
+      }
+
       // Upload functionality
       function setupUpload() {
         const uploadSection = document.getElementById("uploadSection");

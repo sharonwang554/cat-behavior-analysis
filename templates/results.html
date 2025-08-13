@@ -4,7 +4,20 @@
   <a href="/" class="btn">← Back to Dashboard</a>
 </div>
 
-{% for video_name, result in results.items() %}
+{% if results %}
+<div class="card">
+  <div class="download-section">
+    <h3>📄 Overall Analysis Report</h3>
+    <p>
+      Download a comprehensive text report summarizing all video analyses with
+      insights and recommendations.
+    </p>
+    <a href="/download_report" class="btn btn-warning">
+      📄 Download Complete Analysis Report (TXT)
+    </a>
+  </div>
+</div>
+{% endif %} {% for video_name, result in results.items() %}
 <div class="card">
   <h2>📹 {{ video_name }}</h2>
 
