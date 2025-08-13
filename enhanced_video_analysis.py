@@ -4,16 +4,27 @@ Enhanced Cat Video Analysis with Machine Learning
 Combines traditional analysis with advanced ML techniques
 """
 
+from ml_analysis import AdvancedCatBehaviorAnalyzer
+from analysis import analyze_cat_meow, interpret_meow
+import matplotlib.pyplot as plt
 import os
 import json
 from datetime import datetime
-from moviepy.editor import VideoFileClip
-import matplotlib.pyplot as plt
 import numpy as np
 
+# Configure matplotlib to use non-interactive backend for web interface
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
+
+# Try to import moviepy with fallback
+try:
+    from moviepy.editor import VideoFileClip
+    MOVIEPY_AVAILABLE = True
+except ImportError:
+    print("⚠️ MoviePy not available, enhanced analysis disabled")
+    MOVIEPY_AVAILABLE = False
+
 # Import existing analysis modules
-from analysis import analyze_cat_meow, interpret_meow
-from ml_analysis import AdvancedCatBehaviorAnalyzer
 
 
 class EnhancedCatVideoAnalyzer:

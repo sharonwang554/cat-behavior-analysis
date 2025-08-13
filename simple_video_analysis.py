@@ -4,6 +4,9 @@ Simplified Cat Video Analysis Script
 Works with basic dependencies and provides audio + basic visual analysis
 """
 
+# Import configuration first to set matplotlib backend
+from config import *
+
 from analysis import analyze_cat_meow, interpret_meow, print_analysis_results
 import cv2
 import numpy as np
@@ -12,8 +15,7 @@ import os
 import glob
 from datetime import datetime
 import json
-import warnings
-warnings.filterwarnings('ignore')
+
 
 # Import functions from existing analysis.py
 

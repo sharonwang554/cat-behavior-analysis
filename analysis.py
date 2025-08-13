@@ -1,3 +1,6 @@
+# Import configuration first to set matplotlib backend
+from config import *
+
 import librosa
 import librosa.display
 import numpy as np
@@ -5,8 +8,6 @@ import matplotlib.pyplot as plt
 from scipy import signal
 import glob
 import os
-import warnings
-warnings.filterwarnings('ignore')
 
 
 def analyze_cat_meow(file_path):

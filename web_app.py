@@ -4,6 +4,9 @@ Cat Behavior Analysis Web Interface
 Displays analysis results on a webpage with download options
 """
 
+# Import configuration first to set matplotlib backend
+from config import *
+
 from flask import Flask, render_template, send_file, request, jsonify, redirect, url_for, flash
 import os
 import json

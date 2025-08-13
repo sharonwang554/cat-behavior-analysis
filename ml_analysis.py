@@ -4,22 +4,41 @@ Advanced Machine Learning Cat Behavior Analysis
 Uses neural networks and sophisticated ML techniques for enhanced accuracy
 """
 
-import numpy as np
-import librosa
 import cv2
-import tensorflow as tf
-from tensorflow import keras
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.svm import SVC
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score
-import joblib
+import librosa
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
 import os
 import json
 from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
+
+# Configure matplotlib to use non-interactive backend for web interface
+matplotlib.use('Agg')  # Use non-interactive backend
+
+
+# Try to import ML libraries with fallback
+try:
+    import tensorflow as tf
+    from tensorflow import keras
+    TF_AVAILABLE = True
+except ImportError:
+    print("⚠️ TensorFlow not available, using fallback methods")
+    TF_AVAILABLE = False
+
+try:
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.svm import SVC
+    from sklearn.preprocessing import StandardScaler, LabelEncoder
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import classification_report, accuracy_score
+    import joblib
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    print("⚠️ scikit-learn not available, using fallback methods")
+    SKLEARN_AVAILABLE = False
 
 
 class AdvancedCatBehaviorAnalyzer:

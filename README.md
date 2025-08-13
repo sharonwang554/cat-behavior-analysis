@@ -157,22 +157,40 @@ A comprehensive AI-powered system for analyzing cat behavior through both audio 
 ### Automatic Setup (Recommended)
 
 ```bash
-python3 setup_video_analysis.py
+# One-command setup and start
+./run_web_interface.sh
 ```
 
 ### Manual Installation
 
 ```bash
+# Create virtual environment (recommended)
+python3.11 -m venv cat_analysis_env
+source cat_analysis_env/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Start web interface
+python start_web_interface.py
 ```
 
 ### System Requirements
 
-- **Python 3.7+**
+- **Python 3.7+** (Python 3.11+ recommended for ML features)
 - **FFmpeg** (for audio extraction)
 - **Modern web browser** (for web interface)
-- **2GB+ RAM** (for video processing)
-- **Sufficient disk space** for temporary files
+- **4GB+ RAM** (for ML processing, 2GB minimum for traditional analysis)
+- **Sufficient disk space** for temporary files and ML models
+
+### Dependencies Status
+
+- **Core Analysis**: ✅ librosa, matplotlib, scipy, numpy, opencv-python
+- **Web Interface**: ✅ Flask, werkzeug
+- **Enhanced ML** (Optional): TensorFlow, scikit-learn, joblib
+- **Video Processing** (Optional): moviepy, imageio-ffmpeg
+
+> **Note**: The system gracefully falls back to traditional analysis if ML dependencies are unavailable.
 
 ## 💡 Usage Tips
 
@@ -186,15 +204,52 @@ pip install -r requirements.txt
 
 ### Common Issues
 
-- **No audio extracted**: Ensure FFmpeg is installed and videos contain audio tracks
-- **Analysis fails**: Check video file integrity and supported formats
-- **Web interface not loading**: Verify port 5001 is available
-- **Upload fails**: Check file size limits (500MB max) and format support
+#### **matplotlib Threading Error (macOS)**
+
+- **Error**: `NSWindow should only be instantiated on the main thread!`
+- **Cause**: matplotlib GUI backend conflict with web interface
+- **Solution**: ✅ **Fixed** - System now uses non-interactive backend automatically
+
+#### **ML Dependencies Missing**
+
+- **Error**: `No module named 'tensorflow'` or `No module named 'moviepy'`
+- **Cause**: Optional ML dependencies not installed
+- **Solution**: System automatically falls back to traditional analysis
+- **To Enable ML**: Install with `pip install tensorflow scikit-learn moviepy`
+
+#### **Virtual Environment Issues**
+
+- **Error**: Import errors or dependency conflicts
+- **Solution**: Use the provided startup script: `./run_web_interface.sh`
+- **Manual Fix**:
+  ```bash
+  source cat_analysis_env/bin/activate
+  pip install -r requirements.txt
+  ```
+
+#### **Port Already in Use**
+
+- **Error**: `Address already in use` on port 5002
+- **Solution**: Kill existing processes or change port in `web_app.py`
+
+#### **Analysis Fails**
+
+- **No audio extracted**: Ensure FFmpeg is installed and videos contain audio
+- **Video format issues**: Use supported formats (MP4, MOV, AVI, MKV, WMV)
+- **File size**: Keep videos under 500MB for optimal performance
+
+### System Status Indicators
+
+- **🧠 ML Available**: Enhanced analysis with neural networks enabled
+- **📊 Traditional Only**: Basic analysis using signal processing
+- **⚠️ Fallback Mode**: ML dependencies missing, using traditional methods
+- **✅ Full System**: All features available and working
 
 ### Getting Help
 
 - Check the detailed guides in `VIDEO_ANALYSIS_GUIDE.md` and `WEB_INTERFACE_README.md`
-- Ensure all dependencies are installed via `setup_video_analysis.py`
+- Review `ML_ANALYSIS_README.md` for advanced ML features
+- Ensure all dependencies are installed via the startup script
 - Verify video files are in supported formats and contain audio
 
 ## 🎯 Perfect For
