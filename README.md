@@ -215,7 +215,11 @@ python start_web_interface.py
 - **Error**: `No module named 'tensorflow'` or `No module named 'moviepy'`
 - **Cause**: Optional ML dependencies not installed
 - **Solution**: System automatically falls back to traditional analysis
-- **To Enable ML**: Install with `pip install tensorflow scikit-learn moviepy`
+- **To Enable ML**:
+  ```bash
+  source cat_analysis_env/bin/activate
+  pip install tensorflow scikit-learn moviepy
+  ```
 
 #### **Virtual Environment Issues**
 
