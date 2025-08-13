@@ -13,7 +13,16 @@ from datetime import datetime
 import glob
 from werkzeug.utils import secure_filename
 from simple_video_analysis import SimpleCatVideoAnalyzer
-from enhanced_video_analysis import EnhancedCatVideoAnalyzer
+
+# Try to import enhanced analyzer, fall back to simple if not available
+try:
+    from enhanced_video_analysis import EnhancedCatVideoAnalyzer
+    ML_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Enhanced ML analysis not available: {e}")
+    print("📝 Falling back to traditional analysis only")
+    EnhancedCatVideoAnalyzer = None
+    ML_AVAILABLE = False
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'input_videos'
@@ -33,9 +42,9 @@ def allowed_file(filename):
 class WebCatAnalyzer:
     def __init__(self):
         self.analyzer = SimpleCatVideoAnalyzer()
-        self.enhanced_analyzer = EnhancedCatVideoAnalyzer()
+        self.enhanced_analyzer = EnhancedCatVideoAnalyzer() if ML_AVAILABLE else None
         self.results_cache = {}
-        self.use_ml = True  # Enable ML analysis by default
+        self.use_ml = ML_AVAILABLE  # Enable ML analysis only if available
 
     def cleanup_previous_results(self):
         """Remove all previous analysis results before new run"""
@@ -60,7 +69,7 @@ class WebCatAnalyzer:
         """Run the analysis and cache results"""
         self.cleanup_previous_results()
 
-        if self.use_ml:
+        if self.use_ml and self.enhanced_analyzer:
             # Run enhanced ML analysis
             print("🧠 Running enhanced ML analysis...")
             video_extensions = ['.mp4', '.avi', '.mov', '.mkv', '.wmv']
@@ -74,6 +83,7 @@ class WebCatAnalyzer:
                 self.enhanced_analyzer.analyze_video(video_path)
         else:
             # Run traditional analysis
+            print("📊 Running traditional analysis...")
             self.analyzer.analyze_all_videos()
 
         # Cache the results
@@ -491,7 +501,9 @@ def get_status():
     return jsonify({
         'videos_found': len(video_files),
         'results_available': len(results),
-        'video_files': [os.path.basename(f) for f in video_files]
+        'video_files': [os.path.basename(f) for f in video_files],
+        'ml_available': ML_AVAILABLE,
+        'current_mode': 'Enhanced ML' if web_analyzer.use_ml else 'Traditional'
     })
 
 

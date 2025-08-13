@@ -41,7 +41,7 @@ def main():
     # Start the web application
     try:
         from web_app import app
-        app.run(debug=False, host='0.0.0.0', port=5001)
+        app.run(debug=False, host='0.0.0.0', port=5002)
     except KeyboardInterrupt:
         print("\n👋 Web interface stopped")
     except Exception as e:

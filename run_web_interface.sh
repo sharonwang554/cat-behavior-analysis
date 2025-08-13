@@ -25,4 +25,10 @@ echo "🌐 Starting web server..."
 echo "📱 Access the interface at: http://localhost:5002"
 echo "=================================================="
 
+# Ensure we're in the virtual environment
+if [[ "$VIRTUAL_ENV" != *"cat_analysis_env"* ]]; then
+    echo "⚠️ Activating virtual environment..."
+    source cat_analysis_env/bin/activate
+fi
+
 python start_web_interface.py
