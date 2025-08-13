@@ -347,48 +347,57 @@
       }
 
       function startAnalysis() {
-        analysisInProgress = true;
+        try {
+          analysisInProgress = true;
 
-        // Safely hide analyze button if it exists
-        const analyzeBtn = document.getElementById("analyzeBtn");
-        if (analyzeBtn) {
-          analyzeBtn.style.display = "none";
-        }
+          // Safely hide analyze button if it exists
+          const analyzeBtn = document.getElementById("analyzeBtn");
+          if (analyzeBtn) {
+            analyzeBtn.style.display = "none";
+          }
 
-        // Show loading spinner
-        showLoadingSpinner();
+          // Show loading spinner
+          showLoadingSpinner();
 
-        fetch("/analyze", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            analysisInProgress = false;
-            hideLoadingSpinner();
+          fetch("/analyze", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              analysisInProgress = false;
+              hideLoadingSpinner();
 
-            if (data.success) {
-              showAlert("Analysis complete! " + data.message, "success");
-              setTimeout(() => {
-                window.location.reload();
-              }, 2000);
-            } else {
-              showAlert("Analysis failed: " + data.message, "error");
+              if (data.success) {
+                showAlert("Analysis complete! " + data.message, "success");
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2000);
+              } else {
+                showAlert("Analysis failed: " + data.message, "error");
+                if (analyzeBtn) {
+                  analyzeBtn.style.display = "inline-block";
+                }
+              }
+            })
+            .catch((error) => {
+              analysisInProgress = false;
+              hideLoadingSpinner();
               if (analyzeBtn) {
                 analyzeBtn.style.display = "inline-block";
               }
-            }
-          })
-          .catch((error) => {
-            analysisInProgress = false;
-            hideLoadingSpinner();
-            if (analyzeBtn) {
-              analyzeBtn.style.display = "inline-block";
-            }
-            showAlert("Error: " + error.message, "error");
-          });
+              showAlert("Error: " + error.message, "error");
+            });
+        } catch (error) {
+          console.error("Error in startAnalysis:", error);
+          showAlert("JavaScript error: " + error.message, "error");
+          const analyzeBtn = document.getElementById("analyzeBtn");
+          if (analyzeBtn) {
+            analyzeBtn.style.display = "inline-block";
+          }
+        }
       }
 
       function showAlert(message, type) {
