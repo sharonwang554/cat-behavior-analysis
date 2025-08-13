@@ -19,8 +19,12 @@ from simple_video_analysis import SimpleCatVideoAnalyzer
 
 # Try to import enhanced analyzer, fall back to simple if not available
 try:
-    from enhanced_video_analysis import EnhancedCatVideoAnalyzer
-    ML_AVAILABLE = True
+    from enhanced_video_analysis import EnhancedCatVideoAnalyzer, MOVIEPY_AVAILABLE
+    ML_AVAILABLE = MOVIEPY_AVAILABLE  # ML is only available if MoviePy is available
+    if not MOVIEPY_AVAILABLE:
+        print("⚠️ Enhanced ML analysis disabled: MoviePy not available")
+        print("📝 Install MoviePy with: pip install moviepy")
+        print("📝 Falling back to traditional analysis only")
 except ImportError as e:
     print(f"⚠️ Enhanced ML analysis not available: {e}")
     print("📝 Falling back to traditional analysis only")
@@ -83,7 +87,18 @@ class WebCatAnalyzer:
                     video_files.extend(glob.glob(f'input_videos/*{case_ext}'))
 
             for video_path in video_files:
-                self.enhanced_analyzer.analyze_video(video_path)
+                result = self.enhanced_analyzer.analyze_video(video_path)
+                if result is None:
+                    print(
+                        "⚠️ Enhanced analysis failed, falling back to traditional analysis")
+                    self.analyzer.analyze_all_videos()
+                    break
+        elif self.use_ml and not self.enhanced_analyzer:
+            # ML requested but not available
+            print("⚠️ ML analysis requested but not available")
+            print("💡 Install MoviePy with: pip install moviepy")
+            print("📊 Falling back to traditional analysis...")
+            self.analyzer.analyze_all_videos()
         else:
             # Run traditional analysis
             print("📊 Running traditional analysis...")

@@ -53,6 +53,11 @@ class EnhancedCatVideoAnalyzer:
     def extract_audio_from_video(self, video_path):
         """Extract audio from video file"""
         try:
+            if not MOVIEPY_AVAILABLE:
+                print(
+                    f"❌ MoviePy not available, cannot extract audio from {video_path}")
+                return None
+
             video_name = os.path.splitext(os.path.basename(video_path))[0]
             audio_output = os.path.join(
                 self.folders['audio'], f"{video_name}_audio.wav")
@@ -433,6 +438,11 @@ class EnhancedCatVideoAnalyzer:
     def analyze_video(self, video_path):
         """Perform comprehensive enhanced analysis on a single video"""
         try:
+            if not MOVIEPY_AVAILABLE:
+                print(f"❌ Enhanced analysis requires MoviePy, which is not available")
+                print("💡 Install MoviePy with: pip install moviepy")
+                return None
+
             video_name = os.path.splitext(os.path.basename(video_path))[0]
             print(f"\n🎬 Starting enhanced analysis for: {video_name}")
             print("=" * 60)
