@@ -27,6 +27,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+cat_analysis_env/
 
 # IDE
 .vscode/
