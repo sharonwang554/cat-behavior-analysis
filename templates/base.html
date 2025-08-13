@@ -332,6 +332,20 @@
       // Auto-refresh status every 5 seconds during analysis
       let analysisInProgress = false;
 
+      function showLoadingSpinner() {
+        const loadingDiv = document.getElementById("loadingDiv");
+        if (loadingDiv) {
+          loadingDiv.style.display = "block";
+        }
+      }
+
+      function hideLoadingSpinner() {
+        const loadingDiv = document.getElementById("loadingDiv");
+        if (loadingDiv) {
+          loadingDiv.style.display = "none";
+        }
+      }
+
       function startAnalysis() {
         analysisInProgress = true;
 
@@ -392,20 +406,6 @@
 
       function downloadFile(filename) {
         window.location.href = "/download/" + filename;
-      }
-
-      function showLoadingSpinner() {
-        const loadingDiv = document.getElementById("loadingDiv");
-        if (loadingDiv) {
-          loadingDiv.style.display = "block";
-        }
-      }
-
-      function hideLoadingSpinner() {
-        const loadingDiv = document.getElementById("loadingDiv");
-        if (loadingDiv) {
-          loadingDiv.style.display = "none";
-        }
       }
 
       // Upload functionality
