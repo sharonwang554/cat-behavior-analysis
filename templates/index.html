@@ -115,9 +115,61 @@
     ✅ Analysis complete! Found results for {{ results|length }} video(s).
   </div>
 
-  <button class="btn btn-warning" onclick="startAnalysis()">
+  <div
+    style="
+      background: #e3f2fd;
+      border: 1px solid #2196f3;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    "
+  >
+    <h4 style="color: #1976d2; margin: 0 0 10px 0">
+      🔄 Re-run Analysis Mode Selection
+    </h4>
+    <div style="margin-bottom: 15px">
+      <label style="display: flex; align-items: center; margin-bottom: 8px">
+        <input
+          type="radio"
+          name="rerunAnalysisMode"
+          value="ml"
+          checked
+          style="margin-right: 8px"
+        />
+        <strong>Enhanced ML Analysis</strong> - Uses neural networks and
+        advanced machine learning
+      </label>
+      <label style="display: flex; align-items: center">
+        <input
+          type="radio"
+          name="rerunAnalysisMode"
+          value="traditional"
+          style="margin-right: 8px"
+        />
+        <strong>Traditional Analysis</strong> - Uses signal processing and
+        heuristic methods
+      </label>
+    </div>
+  </div>
+
+  <button
+    id="rerunAnalyzeBtn"
+    class="btn btn-warning"
+    onclick="startAnalysis()"
+  >
     🔄 Re-run Analysis (will clear previous results)
   </button>
+
+  <div id="rerunLoadingDiv" class="loading" style="display: none">
+    <div class="spinner"></div>
+    <p>Re-analyzing videos... This may take several minutes.</p>
+    <p>
+      <small
+        >Processing audio extraction, meow detection, and behavioral
+        analysis...</small
+      >
+    </p>
+  </div>
   {% endif %} {% else %}
   <div class="alert alert-error">
     ❌ No video files found in the input_videos/ folder.

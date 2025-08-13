@@ -333,7 +333,17 @@
       let analysisInProgress = false;
 
       function showLoadingSpinner() {
+        // Try to find existing loading divs
         let loadingDiv = document.getElementById("loadingDiv");
+        let rerunLoadingDiv = document.getElementById("rerunLoadingDiv");
+
+        // Show rerun loading div if it exists
+        if (rerunLoadingDiv) {
+          rerunLoadingDiv.style.display = "block";
+          return;
+        }
+
+        // Show or create main loading div
         if (!loadingDiv) {
           // Create loading div if it doesn't exist
           loadingDiv = document.createElement("div");
@@ -366,8 +376,13 @@
 
       function hideLoadingSpinner() {
         const loadingDiv = document.getElementById("loadingDiv");
+        const rerunLoadingDiv = document.getElementById("rerunLoadingDiv");
+
         if (loadingDiv) {
           loadingDiv.style.display = "none";
+        }
+        if (rerunLoadingDiv) {
+          rerunLoadingDiv.style.display = "none";
         }
       }
 
@@ -375,10 +390,15 @@
         try {
           analysisInProgress = true;
 
-          // Get selected analysis mode
-          const analysisMode = document.querySelector(
+          // Get selected analysis mode (check both initial and rerun modes)
+          let analysisMode = document.querySelector(
             'input[name="analysisMode"]:checked'
           );
+          if (!analysisMode) {
+            analysisMode = document.querySelector(
+              'input[name="rerunAnalysisMode"]:checked'
+            );
+          }
           const useML = !analysisMode || analysisMode.value === "ml";
 
           // Set analysis mode
@@ -392,10 +412,14 @@
             }).catch((error) => console.log("Mode toggle warning:", error));
           }
 
-          // Safely hide analyze button if it exists
+          // Hide both analyze buttons if they exist
           const analyzeBtn = document.getElementById("analyzeBtn");
+          const rerunAnalyzeBtn = document.getElementById("rerunAnalyzeBtn");
           if (analyzeBtn) {
             analyzeBtn.style.display = "none";
+          }
+          if (rerunAnalyzeBtn) {
+            rerunAnalyzeBtn.style.display = "none";
           }
 
           // Show loading spinner
@@ -419,25 +443,44 @@
                 }, 2000);
               } else {
                 showAlert("Analysis failed: " + data.message, "error");
+                // Show both buttons again on error
+                const analyzeBtn = document.getElementById("analyzeBtn");
+                const rerunAnalyzeBtn =
+                  document.getElementById("rerunAnalyzeBtn");
                 if (analyzeBtn) {
                   analyzeBtn.style.display = "inline-block";
+                }
+                if (rerunAnalyzeBtn) {
+                  rerunAnalyzeBtn.style.display = "inline-block";
                 }
               }
             })
             .catch((error) => {
               analysisInProgress = false;
               hideLoadingSpinner();
+              // Show both buttons again on error
+              const analyzeBtn = document.getElementById("analyzeBtn");
+              const rerunAnalyzeBtn =
+                document.getElementById("rerunAnalyzeBtn");
               if (analyzeBtn) {
                 analyzeBtn.style.display = "inline-block";
+              }
+              if (rerunAnalyzeBtn) {
+                rerunAnalyzeBtn.style.display = "inline-block";
               }
               showAlert("Error: " + error.message, "error");
             });
         } catch (error) {
           console.error("Error in startAnalysis:", error);
           showAlert("JavaScript error: " + error.message, "error");
+          // Show both buttons again on error
           const analyzeBtn = document.getElementById("analyzeBtn");
+          const rerunAnalyzeBtn = document.getElementById("rerunAnalyzeBtn");
           if (analyzeBtn) {
             analyzeBtn.style.display = "inline-block";
+          }
+          if (rerunAnalyzeBtn) {
+            rerunAnalyzeBtn.style.display = "inline-block";
           }
         }
       }
