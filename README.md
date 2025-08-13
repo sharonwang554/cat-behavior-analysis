@@ -34,30 +34,42 @@ A comprehensive AI-powered system for analyzing cat behavior through both audio 
 - **Audio-visual correlation** links vocalizations with visual behavior
 - **Behavioral recommendations** provides actionable insights for cat care
 - **Confidence scoring** indicates reliability of analysis results
+- **Comprehensive reports** generate detailed text summaries with executive insights
 
 ## 🚀 Quick Start
 
 ### Option 1: Web Interface (Recommended)
 
-1. **Setup the environment:**
+1. **Quick start with the startup script:**
 
    ```bash
-   python3 setup_video_analysis.py
+   ./run_web_interface.sh
    ```
 
-2. **Start the web interface:**
+   This automatically creates the virtual environment, installs dependencies, and starts the server.
+
+2. **Manual setup (alternative):**
 
    ```bash
-   python3 start_web_interface.py
+   # Create virtual environment
+   python3.11 -m venv cat_analysis_env
+   source cat_analysis_env/bin/activate
+
+   # Install dependencies
+   pip install -r requirements.txt
+
+   # Start the web interface
+   python start_web_interface.py
    ```
 
 3. **Open your browser:**
-   Navigate to `http://localhost:5001`
+   Navigate to `http://localhost:5002`
 
 4. **Upload and analyze:**
    - Drag & drop your cat videos or click to select files
    - Click "Start Analysis"
-   - View results and download analysis packages
+   - View results and download comprehensive analysis reports
+   - Download complete analysis packages with all files
 
 ### Option 2: Command Line
 
