@@ -516,6 +516,6 @@ if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)
 
     print("🌐 Starting Cat Behavior Analysis Web Interface...")
-    print("📁 Access the interface at: http://localhost:5001")
+    print("📁 Access the interface at: http://localhost:5002")
 
     app.run(debug=False, host='0.0.0.0', port=5002)

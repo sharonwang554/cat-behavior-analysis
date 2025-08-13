@@ -6,7 +6,7 @@ A comprehensive AI-powered system for analyzing cat behavior through both audio 
 
 ### 🌐 Web Interface
 
-- **User-friendly dashboard** at `http://localhost:5001`
+- **User-friendly dashboard** at `http://localhost:5002`
 - **Drag & drop video upload** directly in the browser
 - **Real-time analysis progress** with visual feedback
 - **Interactive results display** with color-coded confidence levels

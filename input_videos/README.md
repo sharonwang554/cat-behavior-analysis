@@ -17,7 +17,7 @@ Place your cat videos in this folder for analysis.
 ## Usage
 
 1. Copy your cat videos into this folder
-2. Use the web interface at http://localhost:5001 to upload files
+2. Use the web interface at http://localhost:5002 to upload files
 3. Or manually place files here and refresh the web interface
 4. Click "Start Analysis" to begin processing
 

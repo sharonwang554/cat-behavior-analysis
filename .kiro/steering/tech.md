@@ -10,8 +10,10 @@
 - **OpenCV (cv2)** - Video processing and computer vision
 - **NumPy/SciPy** - Numerical computing and signal processing
 - **matplotlib** - Data visualization and plotting
-- **scikit-learn** - Machine learning features
+- **scikit-learn** - Machine learning features and ensemble methods
 - **moviepy** - Video/audio manipulation (full version)
+- **TensorFlow** - Deep learning and neural networks for advanced ML analysis
+- **joblib** - Model persistence and parallel processing
 
 ### Frontend
 
@@ -31,7 +33,9 @@
 - `analysis.py` - Original audio-only meow analysis
 - `video_analysis.py` - Complete video + audio analysis (uses moviepy)
 - `simple_video_analysis.py` - Streamlined analysis (uses ffmpeg directly)
-- `web_app.py` - Flask web application
+- `enhanced_video_analysis.py` - Advanced ML-enhanced analysis combining traditional and neural network methods
+- `ml_analysis.py` - Pure machine learning analysis with neural networks and ensemble methods
+- `web_app.py` - Flask web application with ML integration
 
 ### Setup & Utilities
 
@@ -43,10 +47,12 @@
 ### Initial Setup
 
 ```bash
-# Automatic setup (recommended)
-python3 setup_video_analysis.py
+# Automatic setup with virtual environment (recommended)
+./run_web_interface.sh
 
-# Manual dependency installation
+# Manual setup
+python3.11 -m venv cat_analysis_env
+source cat_analysis_env/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -54,11 +60,13 @@ pip install -r requirements.txt
 
 ```bash
 # Web interface (recommended)
-python3 start_web_interface.py
-# Access at http://localhost:5001
+./run_web_interface.sh
+# Access at http://localhost:5002
 
-# Command line analysis
-python3 video_analysis.py
+# Command line analysis options
+python3 video_analysis.py              # Traditional analysis
+python3 enhanced_video_analysis.py     # ML-enhanced analysis
+python3 simple_video_analysis.py       # Lightweight analysis
 
 # Simplified analysis (fewer dependencies)
 python3 simple_video_analysis.py
