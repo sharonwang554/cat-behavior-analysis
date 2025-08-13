@@ -1,0 +1,16 @@
+# Existing dependencies from analysis.py
+librosa>=0.9.2
+matplotlib>=3.3.4
+scipy>=1.5.4
+numpy>=1.19.5
+scikit-learn>=0.24.2
+
+# Additional dependencies for video analysis
+opencv-python>=4.5.0
+moviepy>=1.0.3
+imageio>=2.9.0
+imageio-ffmpeg>=0.4.0
+
+# Web interface dependencies
+flask>=2.0.0
+werkzeug>=2.0.0

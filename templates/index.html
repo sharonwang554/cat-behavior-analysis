@@ -1,0 +1,198 @@
+{% extends "base.html" %} {% block content %}
+
+<!-- Video Upload Section -->
+<div class="card">
+  <h2>📤 Upload Cat Videos</h2>
+
+  <div id="uploadSection" class="upload-section">
+    <h3>🎬 Drag & Drop Videos Here</h3>
+    <p>Or click the button below to select files</p>
+
+    <input
+      type="file"
+      id="videoFiles"
+      class="file-input"
+      multiple
+      accept=".mp4,.mov,.avi,.mkv,.wmv,.MP4,.MOV,.AVI,.MKV,.WMV"
+    />
+    <button id="uploadBtn" class="upload-btn">📁 Select Video Files</button>
+
+    <div id="uploadProgress" class="upload-progress">
+      <div class="upload-progress-bar"></div>
+    </div>
+
+    <p style="margin-top: 15px; color: #666; font-size: 14px">
+      Supported formats: MP4, MOV, AVI, MKV, WMV (Max 500MB per file)
+    </p>
+  </div>
+
+  <div id="videoList" class="video-list">
+    {% if video_files %} {% for video in video_files %}
+    <div class="video-item">
+      <span>📹 {{ video }}</span>
+      <button class="delete-btn" onclick="deleteVideo('{{ video }}')">
+        Delete
+      </button>
+    </div>
+    {% endfor %} {% else %}
+    <p style="text-align: center; color: #666">No videos uploaded yet</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>📹 Video Analysis Dashboard</h2>
+
+  {% if video_files %}
+  <div class="file-list">
+    <h3>Videos Found in input_videos/ folder:</h3>
+    {% for video in video_files %}
+    <div class="file-item">
+      <span>📹 {{ video }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if not has_results %}
+  <p>
+    Ready to analyze {{ video_files|length }} video file(s). Click the button
+    below to start the analysis.
+  </p>
+
+  <button id="analyzeBtn" class="btn btn-success" onclick="startAnalysis()">
+    🚀 Start Analysis
+  </button>
+
+  <div id="loadingDiv" class="loading" style="display: none">
+    <div class="spinner"></div>
+    <p>Analyzing videos... This may take several minutes.</p>
+    <p>
+      <small
+        >Processing audio extraction, meow detection, and behavioral
+        analysis...</small
+      >
+    </p>
+  </div>
+  {% else %}
+  <div class="alert alert-success">
+    ✅ Analysis complete! Found results for {{ results|length }} video(s).
+  </div>
+
+  <button class="btn btn-warning" onclick="startAnalysis()">
+    🔄 Re-run Analysis (will clear previous results)
+  </button>
+  {% endif %} {% else %}
+  <div class="alert alert-error">
+    ❌ No video files found in the input_videos/ folder.
+    <br /><br />
+    Please add your cat videos (.MOV, .MP4, .AVI files) to the input_videos/
+    folder and refresh this page.
+  </div>
+  {% endif %}
+</div>
+
+{% if has_results %}
+<div class="card">
+  <h2>📊 Analysis Results</h2>
+
+  <div class="analysis-grid">
+    {% for video_name, result in results.items() %}
+    <div class="video-result">
+      <div class="video-title">📹 {{ video_name }}</div>
+
+      <div class="result-item">
+        <span class="result-label">Duration:</span>
+        {{ "%.1f"|format(result.visual_analysis.duration) }} seconds
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">Audio Emotion:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.emotional_state }}
+        </span>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">Visual Activity:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.visual_analysis.dominant_activity == 'High' else 'medium' if result.visual_analysis.dominant_activity == 'Medium' else 'low' }}"
+        >
+          {{ result.visual_analysis.dominant_activity }}
+        </span>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">Urgency Level:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.urgency_level == 'High' else 'medium' if result.audio_analysis.urgency_level == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.urgency_level }}
+        </span>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">Confidence:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.confidence }}
+        </span>
+      </div>
+
+      {% if result.audio_analysis.primary_meaning %}
+      <div class="result-item">
+        <span class="result-label">Meaning:</span>
+        {{ result.audio_analysis.primary_meaning }}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="download-section">
+    <h3>📥 Download Results</h3>
+    <p>
+      Download all analysis results including audio segments, graphs, and data
+      files.
+    </p>
+
+    <a href="/download" class="btn btn-success">
+      📦 Download Complete Analysis Package (ZIP)
+    </a>
+
+    <a href="/results" class="btn"> 📋 View Detailed Results </a>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <h3>ℹ️ How It Works</h3>
+  <p>This system analyzes your cat videos using advanced AI techniques:</p>
+  <ul style="margin: 15px 0; padding-left: 30px">
+    <li>
+      <strong>Audio Processing:</strong> Extracts and filters cat vocalizations
+      from background noise
+    </li>
+    <li>
+      <strong>Meow Analysis:</strong> Analyzes pitch, duration, and spectral
+      features of each meow
+    </li>
+    <li>
+      <strong>Video Analysis:</strong> Tracks movement patterns and activity
+      levels
+    </li>
+    <li>
+      <strong>Behavioral Interpretation:</strong> Combines audio and visual cues
+      for comprehensive insights
+    </li>
+  </ul>
+
+  <p><strong>Supported formats:</strong> MP4, MOV, AVI, MKV, WMV</p>
+  <p>
+    <strong>Note:</strong> Analysis may take several minutes depending on video
+    length and number of files.
+  </p>
+</div>
+{% endblock %}

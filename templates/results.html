@@ -1,0 +1,155 @@
+{% extends "base.html" %} {% block content %}
+<div class="card">
+  <h2>📊 Detailed Analysis Results</h2>
+  <a href="/" class="btn">← Back to Dashboard</a>
+</div>
+
+{% for video_name, result in results.items() %}
+<div class="card">
+  <h2>📹 {{ video_name }}</h2>
+
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    "
+  >
+    <!-- Audio Analysis -->
+    <div>
+      <h3>🎵 Audio Analysis</h3>
+      <div class="result-item">
+        <span class="result-label">Primary Meaning:</span>
+        {{ result.audio_analysis.primary_meaning or 'Not determined' }}
+      </div>
+      <div class="result-item">
+        <span class="result-label">Emotional State:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.emotional_state }}
+        </span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Urgency Level:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.urgency_level == 'High' else 'medium' if result.audio_analysis.urgency_level == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.urgency_level }}
+        </span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Analysis Confidence:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+        >
+          {{ result.audio_analysis.confidence }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Video Analysis -->
+    <div>
+      <h3>🎥 Video Analysis</h3>
+      <div class="result-item">
+        <span class="result-label">Duration:</span>
+        {{ "%.1f"|format(result.visual_analysis.duration) }} seconds
+      </div>
+      <div class="result-item">
+        <span class="result-label">Activity Level:</span>
+        <span
+          class="status-badge status-{{ 'high' if result.visual_analysis.dominant_activity == 'High' else 'medium' if result.visual_analysis.dominant_activity == 'Medium' else 'low' }}"
+        >
+          {{ result.visual_analysis.dominant_activity }}
+        </span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Avg Movement:</span>
+        {{ "%.1f"|format(result.visual_analysis.avg_movement) }}
+      </div>
+      <div class="result-item">
+        <span class="result-label">Avg Brightness:</span>
+        {{ "%.1f"|format(result.visual_analysis.avg_brightness) }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Combined Interpretation -->
+  <div style="margin-top: 30px">
+    <h3>🧠 Combined Behavioral Analysis</h3>
+    <div class="result-item">
+      <span class="result-label">Overall Mood:</span>
+      {{ result.combined_interpretation.overall_mood }}
+    </div>
+    <div class="result-item">
+      <span class="result-label">Behavior Pattern:</span>
+      {{ result.combined_interpretation.behavior_pattern }}
+    </div>
+    <div class="result-item">
+      <span class="result-label">Analysis Confidence:</span>
+      <span
+        class="status-badge status-{{ 'high' if result.combined_interpretation.confidence == 'High' else 'medium' if result.combined_interpretation.confidence == 'Medium' else 'low' }}"
+      >
+        {{ result.combined_interpretation.confidence }}
+      </span>
+    </div>
+
+    {% if result.combined_interpretation.recommendations %}
+    <div style="margin-top: 20px">
+      <h4>💡 Recommendations:</h4>
+      <ul style="margin: 10px 0; padding-left: 30px">
+        {% for rec in result.combined_interpretation.recommendations %}
+        <li>{{ rec }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Download Individual Files -->
+  <div class="download-section">
+    <h3>📥 Download Files for {{ video_name }}</h3>
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      "
+    >
+      <button
+        class="btn"
+        onclick="downloadFile('video_analysis_results/{{ video_name }}_visual_analysis.png')"
+      >
+        📊 Visual Analysis Graph
+      </button>
+      <button
+        class="btn"
+        onclick="downloadFile('combined_analysis_results/{{ video_name }}_combined_analysis.json')"
+      >
+        📋 Complete Analysis Data
+      </button>
+    </div>
+  </div>
+
+  <!-- Analysis Timestamp -->
+  <div
+    style="
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      color: #666;
+      font-size: 0.9em;
+    "
+  >
+    <strong>Analysis completed:</strong> {{ result.timestamp }}
+  </div>
+</div>
+{% endfor %} {% if not results %}
+<div class="card">
+  <div class="alert alert-error">
+    No analysis results found. Please run the analysis first.
+  </div>
+  <a href="/" class="btn">← Back to Dashboard</a>
+</div>
+{% endif %} {% endblock %}
