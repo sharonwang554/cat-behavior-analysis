@@ -13,6 +13,7 @@ from datetime import datetime
 import glob
 from werkzeug.utils import secure_filename
 from simple_video_analysis import SimpleCatVideoAnalyzer
+from enhanced_video_analysis import EnhancedCatVideoAnalyzer
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'input_videos'
@@ -32,7 +33,9 @@ def allowed_file(filename):
 class WebCatAnalyzer:
     def __init__(self):
         self.analyzer = SimpleCatVideoAnalyzer()
+        self.enhanced_analyzer = EnhancedCatVideoAnalyzer()
         self.results_cache = {}
+        self.use_ml = True  # Enable ML analysis by default
 
     def cleanup_previous_results(self):
         """Remove all previous analysis results before new run"""
@@ -57,8 +60,21 @@ class WebCatAnalyzer:
         """Run the analysis and cache results"""
         self.cleanup_previous_results()
 
-        # Run the analysis
-        self.analyzer.analyze_all_videos()
+        if self.use_ml:
+            # Run enhanced ML analysis
+            print("🧠 Running enhanced ML analysis...")
+            video_extensions = ['.mp4', '.avi', '.mov', '.mkv', '.wmv']
+            video_files = []
+
+            for ext in video_extensions:
+                for case_ext in [ext.lower(), ext.upper()]:
+                    video_files.extend(glob.glob(f'input_videos/*{case_ext}'))
+
+            for video_path in video_files:
+                self.enhanced_analyzer.analyze_video(video_path)
+        else:
+            # Run traditional analysis
+            self.analyzer.analyze_all_videos()
 
         # Cache the results
         self.load_results()
@@ -418,6 +434,24 @@ def delete_video(filename):
 
     except Exception as e:
         return jsonify({'success': False, 'message': f'Delete failed: {str(e)}'})
+
+
+@app.route('/toggle_ml', methods=['POST'])
+def toggle_ml_analysis():
+    """Toggle between traditional and ML analysis"""
+    try:
+        data = request.get_json()
+        use_ml = data.get('use_ml', True)
+        web_analyzer.use_ml = use_ml
+
+        analysis_type = "Enhanced ML Analysis" if use_ml else "Traditional Analysis"
+        return jsonify({
+            'success': True,
+            'message': f'Switched to {analysis_type}',
+            'current_mode': analysis_type
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Toggle failed: {str(e)}'})
 
 
 @app.route('/download_report')

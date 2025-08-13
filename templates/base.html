@@ -333,10 +333,35 @@
       let analysisInProgress = false;
 
       function showLoadingSpinner() {
-        const loadingDiv = document.getElementById("loadingDiv");
-        if (loadingDiv) {
-          loadingDiv.style.display = "block";
+        let loadingDiv = document.getElementById("loadingDiv");
+        if (!loadingDiv) {
+          // Create loading div if it doesn't exist
+          loadingDiv = document.createElement("div");
+          loadingDiv.id = "loadingDiv";
+          loadingDiv.className = "loading";
+          loadingDiv.innerHTML = `
+            <div class="spinner"></div>
+            <p>Analyzing videos... This may take several minutes.</p>
+            <p><small>Processing audio extraction, meow detection, and behavioral analysis...</small></p>
+          `;
+          loadingDiv.style.display = "none";
+
+          // Insert after the analyze button
+          const analyzeBtn = document.getElementById("analyzeBtn");
+          if (analyzeBtn && analyzeBtn.parentNode) {
+            analyzeBtn.parentNode.insertBefore(
+              loadingDiv,
+              analyzeBtn.nextSibling
+            );
+          } else {
+            // Fallback: append to container
+            const container = document.querySelector(".container");
+            if (container) {
+              container.appendChild(loadingDiv);
+            }
+          }
         }
+        loadingDiv.style.display = "block";
       }
 
       function hideLoadingSpinner() {
@@ -349,6 +374,23 @@
       function startAnalysis() {
         try {
           analysisInProgress = true;
+
+          // Get selected analysis mode
+          const analysisMode = document.querySelector(
+            'input[name="analysisMode"]:checked'
+          );
+          const useML = !analysisMode || analysisMode.value === "ml";
+
+          // Set analysis mode
+          if (analysisMode) {
+            fetch("/toggle_ml", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ use_ml: useML }),
+            }).catch((error) => console.log("Mode toggle warning:", error));
+          }
 
           // Safely hide analyze button if it exists
           const analyzeBtn = document.getElementById("analyzeBtn");
