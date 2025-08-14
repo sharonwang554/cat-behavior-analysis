@@ -74,27 +74,30 @@
       </div>
       <div class="result-item">
         <span class="result-label">Emotional State:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
-        >
+        <span class="status-badge" id="emotion-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['emotional_state'] }}
         </span>
+        <script>
+          document.getElementById('emotion-badge-{{ loop.index0 }}').className += ' ' + getEmotionalStateClass('{{ result['audio_analysis']['emotional_state'] }}');
+        </script>
       </div>
       <div class="result-item">
         <span class="result-label">Urgency Level:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['urgency_level'] else 'medium' if 'Medium' in result['audio_analysis']['urgency_level'] else 'low' }}"
-        >
+        <span class="status-badge" id="urgency-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['urgency_level'] }}
         </span>
+        <script>
+          document.getElementById('urgency-badge-{{ loop.index0 }}').className += ' ' + getUrgencyClass('{{ result['audio_analysis']['urgency_level'] }}');
+        </script>
       </div>
       <div class="result-item">
         <span class="result-label">Analysis Confidence:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
-        >
+        <span class="status-badge" id="confidence-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['confidence'] }}
         </span>
+        <script>
+          document.getElementById('confidence-badge-{{ loop.index0 }}').className += ' ' + getConfidenceClass('{{ result['audio_analysis']['confidence'] }}');
+        </script>
       </div>
     </div>
 
@@ -107,11 +110,12 @@
       </div>
       <div class="result-item">
         <span class="result-label">Activity Level:</span>
-        <span
-          class="status-badge status-{{ 'high' if result['visual_analysis']['dominant_activity'] == 'High' else 'medium' if result['visual_analysis']['dominant_activity'] == 'Medium' else 'low' }}"
-        >
+        <span class="status-badge" id="activity-badge-{{ loop.index0 }}">
           {{ result['visual_analysis']['dominant_activity'] }}
         </span>
+        <script>
+          document.getElementById('activity-badge-{{ loop.index0 }}').className += ' ' + getActivityClass('{{ result['visual_analysis']['dominant_activity'] }}');
+        </script>
       </div>
       <div class="result-item">
         <span class="result-label">Avg Movement:</span>
@@ -138,10 +142,14 @@
     <div class="result-item">
       <span class="result-label">Analysis Confidence:</span>
       <span
-        class="status-badge status-{{ 'high' if 'High' in result['combined_interpretation']['confidence'] else 'medium' if 'Medium' in result['combined_interpretation']['confidence'] else 'low' }}"
+        class="status-badge"
+        id="combined-confidence-badge-{{ loop.index0 }}"
       >
         {{ result['combined_interpretation']['confidence'] }}
       </span>
+      <script>
+        document.getElementById('combined-confidence-badge-{{ loop.index0 }}').className += ' ' + getConfidenceClass('{{ result['combined_interpretation']['confidence'] }}');
+      </script>
     </div>
 
     {% if result['combined_interpretation']['recommendations'] %}

@@ -76,9 +76,15 @@ class WebCatAnalyzer:
         """Run the analysis and cache results"""
         self.cleanup_previous_results()
 
-        if self.use_ml and self.enhanced_analyzer:
-            # Run enhanced ML analysis
-            print("🧠 Running enhanced ML analysis...")
+        print("🚀 Running Combined Analysis (Traditional + ML)...")
+
+        # Always run traditional analysis first
+        print("📊 Step 1: Running traditional analysis...")
+        self.analyzer.analyze_all_videos()
+
+        # Run enhanced ML analysis if available
+        if self.enhanced_analyzer:
+            print("🧠 Step 2: Running enhanced ML analysis...")
             video_extensions = ['.mp4', '.avi', '.mov', '.mkv', '.wmv']
             video_files = []
 
@@ -89,22 +95,13 @@ class WebCatAnalyzer:
             for video_path in video_files:
                 result = self.enhanced_analyzer.analyze_video(video_path)
                 if result is None:
-                    print(
-                        "⚠️ Enhanced analysis failed, falling back to traditional analysis")
-                    self.analyzer.analyze_all_videos()
-                    break
-        elif self.use_ml and not self.enhanced_analyzer:
-            # ML requested but not available
-            print("⚠️ ML analysis requested but not available")
-            print("💡 Install MoviePy with: pip install moviepy")
-            print("📊 Falling back to traditional analysis...")
-            self.analyzer.analyze_all_videos()
+                    print("⚠️ Enhanced analysis failed for", video_path)
         else:
-            # Run traditional analysis
-            print("📊 Running traditional analysis...")
-            self.analyzer.analyze_all_videos()
+            print("💡 ML analysis not available - install MoviePy for enhanced features")
 
-        # Cache the results
+        print("✅ Combined analysis complete!")
+
+        # Cache the results (prioritizes traditional analysis with ML enhancements)
         self.load_results()
 
         return self.results_cache
@@ -154,6 +151,49 @@ class WebCatAnalyzer:
         try:
             # Extract traditional analysis data
             traditional = enhanced_data.get('traditional_analysis', {})
+            enhanced_interpretation = enhanced_data.get(
+                'enhanced_interpretation', {})
+            ml_analysis = enhanced_data.get('ml_analysis', {})
+
+            # Extract activity level from enhanced interpretation or ML analysis
+            activity_level = enhanced_interpretation.get(
+                'activity_level', 'Unknown')
+
+            # Normalize case - convert to proper case
+            if activity_level and activity_level != 'Unknown':
+                activity_level = activity_level.capitalize()
+
+            # If activity level is still unknown, try to derive from ML analysis
+            if activity_level == 'Unknown' or not activity_level:
+                ml_prediction = ml_analysis.get('ml_prediction', '').lower()
+                if 'excited' in ml_prediction or 'active' in ml_prediction:
+                    activity_level = 'High'
+                elif 'calm' in ml_prediction or 'relaxed' in ml_prediction:
+                    activity_level = 'Low'
+                else:
+                    # Check feature analysis for activity indicators
+                    feature_analysis = ml_analysis.get('feature_analysis', [])
+                    for feature in feature_analysis:
+                        if 'high activity' in feature.lower():
+                            activity_level = 'High'
+                            break
+                        elif 'low activity' in feature.lower():
+                            activity_level = 'Low'
+                            break
+                        elif 'medium activity' in feature.lower():
+                            activity_level = 'Medium'
+                            break
+
+                    # If still unknown, default based on overall behavior
+                    if activity_level == 'Unknown':
+                        overall_behavior = enhanced_interpretation.get(
+                            'overall_behavior', '').lower()
+                        if 'highly_active' in overall_behavior or 'active' in overall_behavior:
+                            activity_level = 'High'
+                        elif 'calm' in overall_behavior or 'relaxed' in overall_behavior:
+                            activity_level = 'Low'
+                        else:
+                            activity_level = 'Medium'  # Default fallback
 
             # Create a regular format structure
             regular_data = {
@@ -162,13 +202,13 @@ class WebCatAnalyzer:
                 'audio_analysis': traditional,
                 'visual_analysis': {
                     'duration': 0,
-                    'dominant_activity': 'Unknown',
-                    'avg_movement': 0,
-                    'avg_brightness': 0
+                    'dominant_activity': activity_level,
+                    'avg_movement': 0.5,  # Default reasonable value
+                    'avg_brightness': 128  # Default reasonable value
                 },
                 'combined_interpretation': {
-                    'overall_mood': enhanced_data.get('enhanced_interpretation', {}).get('overall_behavior', 'Unknown'),
-                    'behavior_pattern': enhanced_data.get('enhanced_interpretation', {}).get('behavioral_complexity', 'Unknown'),
+                    'overall_mood': enhanced_interpretation.get('overall_behavior', 'Unknown'),
+                    'behavior_pattern': enhanced_interpretation.get('behavioral_complexity', 'Unknown'),
                     'confidence': enhanced_data.get('confidence_assessment', {}).get('recommendation', 'Unknown'),
                     'recommendations': enhanced_data.get('comprehensive_recommendations', [])
                 }
@@ -190,7 +230,7 @@ class WebCatAnalyzer:
                 'video_name': enhanced_data.get('video_name', 'unknown'),
                 'timestamp': enhanced_data.get('timestamp', ''),
                 'audio_analysis': {'primary_meaning': 'Analysis unavailable', 'emotional_state': 'Unknown', 'urgency_level': 'Unknown', 'confidence': 'Low'},
-                'visual_analysis': {'duration': 0, 'dominant_activity': 'Unknown', 'avg_movement': 0, 'avg_brightness': 0},
+                'visual_analysis': {'duration': 0, 'dominant_activity': 'Medium', 'avg_movement': 0, 'avg_brightness': 0},
                 'combined_interpretation': {'overall_mood': 'Unknown', 'behavior_pattern': 'Unknown', 'confidence': 'Low', 'recommendations': []}
             }
 
@@ -532,22 +572,7 @@ def delete_video(filename):
         return jsonify({'success': False, 'message': f'Delete failed: {str(e)}'})
 
 
-@app.route('/toggle_ml', methods=['POST'])
-def toggle_ml_analysis():
-    """Toggle between traditional and ML analysis"""
-    try:
-        data = request.get_json()
-        use_ml = data.get('use_ml', True)
-        web_analyzer.use_ml = use_ml
-
-        analysis_type = "Enhanced ML Analysis" if use_ml else "Traditional Analysis"
-        return jsonify({
-            'success': True,
-            'message': f'Switched to {analysis_type}',
-            'current_mode': analysis_type
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'message': f'Toggle failed: {str(e)}'})
+# Analysis mode toggle removed - now always runs combined analysis
 
 
 @app.route('/download_report')

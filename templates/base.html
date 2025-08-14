@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🐱 Cat Behavior Analysis</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
     <style>
       * {
         margin: 0;
@@ -29,6 +33,7 @@
         text-align: center;
         color: white;
         margin-bottom: 30px;
+        padding: 20px;
       }
 
       .header h1 {
@@ -109,6 +114,7 @@
         margin: 5px;
       }
 
+      /* Confidence levels */
       .status-high {
         background: #d4edda;
         color: #155724;
@@ -122,6 +128,69 @@
       .status-low {
         background: #f8d7da;
         color: #721c24;
+      }
+
+      /* Emotional states */
+      .status-playful {
+        background: #e7f3ff;
+        color: #0066cc;
+      }
+
+      .status-stressed {
+        background: #ffe6e6;
+        color: #cc0000;
+      }
+
+      .status-calm {
+        background: #e8f5e8;
+        color: #2d5a2d;
+      }
+
+      .status-seeking {
+        background: #fff0e6;
+        color: #cc6600;
+      }
+
+      .status-serious {
+        background: #f0f0f0;
+        color: #4d4d4d;
+      }
+
+      .status-alert {
+        background: #fff3e0;
+        color: #e65100;
+      }
+
+      .status-relaxed {
+        background: #f3e5f5;
+        color: #7b1fa2;
+      }
+
+      /* Activity levels */
+      .status-activity-high {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .status-activity-medium {
+        background: #fff8e1;
+        color: #f57c00;
+      }
+
+      .status-activity-low {
+        background: #e8f5e8;
+        color: #388e3c;
+      }
+
+      /* Urgency levels */
+      .status-urgent {
+        background: #ffcdd2;
+        color: #d32f2f;
+      }
+
+      .status-normal {
+        background: #e1f5fe;
+        color: #0277bd;
       }
 
       .analysis-grid {
@@ -315,18 +384,64 @@
         transition: width 0.3s ease;
       }
     </style>
+    <script>
+      // Helper functions for determining CSS classes based on content
+      function getEmotionalStateClass(state) {
+        if (!state) return "status-low";
+        const lowerState = state.toLowerCase();
+        if (lowerState.includes("playful") || lowerState.includes("expressive"))
+          return "status-playful";
+        if (lowerState.includes("stressed") || lowerState.includes("strained"))
+          return "status-stressed";
+        if (lowerState.includes("calm") || lowerState.includes("controlled"))
+          return "status-calm";
+        if (lowerState.includes("seeking") || lowerState.includes("attention"))
+          return "status-seeking";
+        if (lowerState.includes("serious") || lowerState.includes("formal"))
+          return "status-serious";
+        if (lowerState.includes("alert") || lowerState.includes("excited"))
+          return "status-alert";
+        if (lowerState.includes("relaxed") || lowerState.includes("content"))
+          return "status-relaxed";
+        return "status-medium";
+      }
+
+      function getActivityClass(activity) {
+        if (!activity) return "status-low";
+        const lowerActivity = activity.toLowerCase();
+        if (lowerActivity.includes("high")) return "status-activity-high";
+        if (lowerActivity.includes("medium")) return "status-activity-medium";
+        if (lowerActivity.includes("low")) return "status-activity-low";
+        return "status-low";
+      }
+
+      function getUrgencyClass(urgency) {
+        if (!urgency) return "status-low";
+        const lowerUrgency = urgency.toLowerCase();
+        if (lowerUrgency.includes("high") || lowerUrgency.includes("urgent"))
+          return "status-urgent";
+        if (lowerUrgency.includes("low") || lowerUrgency.includes("very low"))
+          return "status-normal";
+        return "status-medium";
+      }
+
+      function getConfidenceClass(confidence) {
+        if (!confidence) return "status-low";
+        const lowerConf = confidence.toLowerCase();
+        if (lowerConf.includes("high")) return "status-high";
+        if (lowerConf.includes("medium")) return "status-medium";
+        return "status-low";
+      }
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>🐱 Cat Behavior Analysis</h1>
-        <p>
-          Comprehensive AI-powered analysis of cat vocalizations and behavior
-        </p>
-      </div>
-
-      {% block content %}{% endblock %}
+    <div class="header">
+      <h1>🐱 Cat Behavior Analysis</h1>
+      <p>Comprehensive AI-powered analysis of cat vocalizations and behavior</p>
     </div>
+
+    <div class="container">{% block content %}{% endblock %}</div>
 
     <script>
       // Auto-refresh status every 5 seconds during analysis
@@ -390,27 +505,7 @@
         try {
           analysisInProgress = true;
 
-          // Get selected analysis mode (check both initial and rerun modes)
-          let analysisMode = document.querySelector(
-            'input[name="analysisMode"]:checked'
-          );
-          if (!analysisMode) {
-            analysisMode = document.querySelector(
-              'input[name="rerunAnalysisMode"]:checked'
-            );
-          }
-          const useML = !analysisMode || analysisMode.value === "ml";
-
-          // Set analysis mode
-          if (analysisMode) {
-            fetch("/toggle_ml", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ use_ml: useML }),
-            }).catch((error) => console.log("Mode toggle warning:", error));
-          }
+          // Combined analysis is now automatic - no mode selection needed
 
           // Hide both analyze buttons if they exist
           const analyzeBtn = document.getElementById("analyzeBtn");

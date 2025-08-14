@@ -54,46 +54,9 @@
   </div>
 
   {% if not has_results %}
-  <div
-    style="
-      background: #e3f2fd;
-      border: 1px solid #2196f3;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 15px 0;
-    "
-  >
-    <h4 style="color: #1976d2; margin: 0 0 10px 0">
-      🧠 Analysis Mode Selection
-    </h4>
-    <div style="margin-bottom: 15px">
-      <label style="display: flex; align-items: center; margin-bottom: 8px">
-        <input
-          type="radio"
-          name="analysisMode"
-          value="ml"
-          checked
-          style="margin-right: 8px"
-        />
-        <strong>Enhanced ML Analysis</strong> - Uses neural networks and
-        advanced machine learning
-      </label>
-      <label style="display: flex; align-items: center">
-        <input
-          type="radio"
-          name="analysisMode"
-          value="traditional"
-          style="margin-right: 8px"
-        />
-        <strong>Traditional Analysis</strong> - Uses signal processing and
-        heuristic methods
-      </label>
-    </div>
-  </div>
-
   <p>
-    Ready to analyze {{ video_files|length }} video file(s). Select your
-    preferred analysis method and click the button below.
+    Ready to analyze {{ video_files|length }} video file(s) using combined
+    Traditional + ML analysis for the most comprehensive results.
   </p>
 
   <button id="analyzeBtn" class="btn btn-success" onclick="startAnalysis()">
@@ -113,43 +76,6 @@
   {% else %}
   <div class="alert alert-success">
     ✅ Analysis complete! Found results for {{ results|length }} video(s).
-  </div>
-
-  <div
-    style="
-      background: #e3f2fd;
-      border: 1px solid #2196f3;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 15px 0;
-    "
-  >
-    <h4 style="color: #1976d2; margin: 0 0 10px 0">
-      🔄 Re-run Analysis Mode Selection
-    </h4>
-    <div style="margin-bottom: 15px">
-      <label style="display: flex; align-items: center; margin-bottom: 8px">
-        <input
-          type="radio"
-          name="rerunAnalysisMode"
-          value="ml"
-          checked
-          style="margin-right: 8px"
-        />
-        <strong>Enhanced ML Analysis</strong> - Uses neural networks and
-        advanced machine learning
-      </label>
-      <label style="display: flex; align-items: center">
-        <input
-          type="radio"
-          name="rerunAnalysisMode"
-          value="traditional"
-          style="margin-right: 8px"
-        />
-        <strong>Traditional Analysis</strong> - Uses signal processing and
-        heuristic methods
-      </label>
-    </div>
   </div>
 
   <button
@@ -196,38 +122,42 @@
 
       <div class="result-item">
         <span class="result-label">Audio Emotion:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
-        >
+        <span class="status-badge" id="emotion-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['emotional_state'] }}
         </span>
+        <script>
+          document.getElementById('emotion-badge-{{ loop.index0 }}').className += ' ' + getEmotionalStateClass('{{ result['audio_analysis']['emotional_state'] }}');
+        </script>
       </div>
 
       <div class="result-item">
         <span class="result-label">Visual Activity:</span>
-        <span
-          class="status-badge status-{{ 'high' if result['visual_analysis']['dominant_activity'] == 'High' else 'medium' if result['visual_analysis']['dominant_activity'] == 'Medium' else 'low' }}"
-        >
+        <span class="status-badge" id="activity-badge-{{ loop.index0 }}">
           {{ result['visual_analysis']['dominant_activity'] }}
         </span>
+        <script>
+          document.getElementById('activity-badge-{{ loop.index0 }}').className += ' ' + getActivityClass('{{ result['visual_analysis']['dominant_activity'] }}');
+        </script>
       </div>
 
       <div class="result-item">
         <span class="result-label">Urgency Level:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['urgency_level'] else 'medium' if 'Medium' in result['audio_analysis']['urgency_level'] else 'low' }}"
-        >
+        <span class="status-badge" id="urgency-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['urgency_level'] }}
         </span>
+        <script>
+          document.getElementById('urgency-badge-{{ loop.index0 }}').className += ' ' + getUrgencyClass('{{ result['audio_analysis']['urgency_level'] }}');
+        </script>
       </div>
 
       <div class="result-item">
         <span class="result-label">Confidence:</span>
-        <span
-          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
-        >
+        <span class="status-badge" id="confidence-badge-{{ loop.index0 }}">
           {{ result['audio_analysis']['confidence'] }}
         </span>
+        <script>
+          document.getElementById('confidence-badge-{{ loop.index0 }}').className += ' ' + getConfidenceClass('{{ result['audio_analysis']['confidence'] }}');
+        </script>
       </div>
 
       {% if result['audio_analysis']['primary_meaning'] %}
