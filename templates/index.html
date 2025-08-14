@@ -191,49 +191,49 @@
 
       <div class="result-item">
         <span class="result-label">Duration:</span>
-        {{ "%.1f"|format(result.visual_analysis.duration) }} seconds
+        {{ "%.1f"|format(result['visual_analysis']['duration']) }} seconds
       </div>
 
       <div class="result-item">
         <span class="result-label">Audio Emotion:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.emotional_state }}
+          {{ result['audio_analysis']['emotional_state'] }}
         </span>
       </div>
 
       <div class="result-item">
         <span class="result-label">Visual Activity:</span>
         <span
-          class="status-badge status-{{ 'high' if result.visual_analysis.dominant_activity == 'High' else 'medium' if result.visual_analysis.dominant_activity == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['visual_analysis']['dominant_activity'] == 'High' else 'medium' if result['visual_analysis']['dominant_activity'] == 'Medium' else 'low' }}"
         >
-          {{ result.visual_analysis.dominant_activity }}
+          {{ result['visual_analysis']['dominant_activity'] }}
         </span>
       </div>
 
       <div class="result-item">
         <span class="result-label">Urgency Level:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.urgency_level == 'High' else 'medium' if result.audio_analysis.urgency_level == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['urgency_level'] == 'High' else 'medium' if result['audio_analysis']['urgency_level'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.urgency_level }}
+          {{ result['audio_analysis']['urgency_level'] }}
         </span>
       </div>
 
       <div class="result-item">
         <span class="result-label">Confidence:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.confidence }}
+          {{ result['audio_analysis']['confidence'] }}
         </span>
       </div>
 
-      {% if result.audio_analysis.primary_meaning %}
+      {% if result['audio_analysis']['primary_meaning'] %}
       <div class="result-item">
         <span class="result-label">Meaning:</span>
-        {{ result.audio_analysis.primary_meaning }}
+        {{ result['audio_analysis']['primary_meaning'] }}
       </div>
       {% endif %}
     </div>

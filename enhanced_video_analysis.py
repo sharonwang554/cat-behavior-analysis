@@ -18,7 +18,7 @@ matplotlib.use('Agg')  # Use non-interactive backend
 
 # Try to import moviepy with fallback
 try:
-    from moviepy.editor import VideoFileClip
+    from moviepy import VideoFileClip
     MOVIEPY_AVAILABLE = True
 except ImportError:
     print("⚠️ MoviePy not available, enhanced analysis disabled")
@@ -71,7 +71,7 @@ class EnhancedCatVideoAnalyzer:
                 print(f"❌ No audio track found in {video_path}")
                 return None
 
-            audio.write_audiofile(audio_output, verbose=False, logger=None)
+            audio.write_audiofile(audio_output, logger=None)
             audio.close()
             video.close()
 
@@ -86,19 +86,9 @@ class EnhancedCatVideoAnalyzer:
         """Perform traditional meow analysis"""
         try:
             print("🔍 Performing traditional audio analysis...")
+            # analyze_cat_meow already returns the full interpretation
             results = analyze_cat_meow(audio_path)
-            if results:
-                interpretation = interpret_meow(
-                    results['duration'],
-                    results['avg_pitch'],
-                    results['pitch_variation'],
-                    results['avg_loudness'],
-                    results['loudness_variation'],
-                    results['spectral_centroid'],
-                    results['zero_crossing_rate']
-                )
-                return interpretation
-            return None
+            return results
         except Exception as e:
             print(f"❌ Error in traditional analysis: {e}")
             return None

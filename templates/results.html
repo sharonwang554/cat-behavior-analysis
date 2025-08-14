@@ -70,30 +70,30 @@
       <h3>🎵 Audio Analysis</h3>
       <div class="result-item">
         <span class="result-label">Primary Meaning:</span>
-        {{ result.audio_analysis.primary_meaning or 'Not determined' }}
+        {{ result['audio_analysis']['primary_meaning'] or 'Not determined' }}
       </div>
       <div class="result-item">
         <span class="result-label">Emotional State:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.emotional_state }}
+          {{ result['audio_analysis']['emotional_state'] }}
         </span>
       </div>
       <div class="result-item">
         <span class="result-label">Urgency Level:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.urgency_level == 'High' else 'medium' if result.audio_analysis.urgency_level == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['urgency_level'] == 'High' else 'medium' if result['audio_analysis']['urgency_level'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.urgency_level }}
+          {{ result['audio_analysis']['urgency_level'] }}
         </span>
       </div>
       <div class="result-item">
         <span class="result-label">Analysis Confidence:</span>
         <span
-          class="status-badge status-{{ 'high' if result.audio_analysis.confidence == 'High' else 'medium' if result.audio_analysis.confidence == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
         >
-          {{ result.audio_analysis.confidence }}
+          {{ result['audio_analysis']['confidence'] }}
         </span>
       </div>
     </div>
@@ -103,23 +103,23 @@
       <h3>🎥 Video Analysis</h3>
       <div class="result-item">
         <span class="result-label">Duration:</span>
-        {{ "%.1f"|format(result.visual_analysis.duration) }} seconds
+        {{ "%.1f"|format(result['visual_analysis']['duration']) }} seconds
       </div>
       <div class="result-item">
         <span class="result-label">Activity Level:</span>
         <span
-          class="status-badge status-{{ 'high' if result.visual_analysis.dominant_activity == 'High' else 'medium' if result.visual_analysis.dominant_activity == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if result['visual_analysis']['dominant_activity'] == 'High' else 'medium' if result['visual_analysis']['dominant_activity'] == 'Medium' else 'low' }}"
         >
-          {{ result.visual_analysis.dominant_activity }}
+          {{ result['visual_analysis']['dominant_activity'] }}
         </span>
       </div>
       <div class="result-item">
         <span class="result-label">Avg Movement:</span>
-        {{ "%.1f"|format(result.visual_analysis.avg_movement) }}
+        {{ "%.1f"|format(result['visual_analysis']['avg_movement']) }}
       </div>
       <div class="result-item">
         <span class="result-label">Avg Brightness:</span>
-        {{ "%.1f"|format(result.visual_analysis.avg_brightness) }}
+        {{ "%.1f"|format(result['visual_analysis']['avg_brightness']) }}
       </div>
     </div>
   </div>
@@ -129,26 +129,26 @@
     <h3>🧠 Combined Behavioral Analysis</h3>
     <div class="result-item">
       <span class="result-label">Overall Mood:</span>
-      {{ result.combined_interpretation.overall_mood }}
+      {{ result['combined_interpretation']['overall_mood'] }}
     </div>
     <div class="result-item">
       <span class="result-label">Behavior Pattern:</span>
-      {{ result.combined_interpretation.behavior_pattern }}
+      {{ result['combined_interpretation']['behavior_pattern'] }}
     </div>
     <div class="result-item">
       <span class="result-label">Analysis Confidence:</span>
       <span
-        class="status-badge status-{{ 'high' if result.combined_interpretation.confidence == 'High' else 'medium' if result.combined_interpretation.confidence == 'Medium' else 'low' }}"
+        class="status-badge status-{{ 'high' if result['combined_interpretation']['confidence'] == 'High' else 'medium' if result['combined_interpretation']['confidence'] == 'Medium' else 'low' }}"
       >
-        {{ result.combined_interpretation.confidence }}
+        {{ result['combined_interpretation']['confidence'] }}
       </span>
     </div>
 
-    {% if result.combined_interpretation.recommendations %}
+    {% if result['combined_interpretation']['recommendations'] %}
     <div style="margin-top: 20px">
       <h4>💡 Recommendations:</h4>
       <ul style="margin: 10px 0; padding-left: 30px">
-        {% for rec in result.combined_interpretation.recommendations %}
+        {% for rec in result['combined_interpretation']['recommendations'] %}
         <li>{{ rec }}</li>
         {% endfor %}
       </ul>

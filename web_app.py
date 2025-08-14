@@ -114,7 +114,13 @@ class WebCatAnalyzer:
         self.results_cache = {}
 
         json_files = glob.glob('combined_analysis_results/*.json')
-        for json_file in json_files:
+
+        # Separate regular and enhanced analysis files
+        regular_files = [f for f in json_files if 'enhanced_analysis' not in f]
+        enhanced_files = [f for f in json_files if 'enhanced_analysis' in f]
+
+        # Load regular files first (they have the structure templates expect)
+        for json_file in regular_files:
             try:
                 with open(json_file, 'r') as f:
                     data = json.load(f)
@@ -124,7 +130,69 @@ class WebCatAnalyzer:
             except Exception as e:
                 print(f"Error loading {json_file}: {e}")
 
+        # Only load enhanced files if no regular file exists for that video
+        for json_file in enhanced_files:
+            try:
+                with open(json_file, 'r') as f:
+                    data = json.load(f)
+                    video_name = data.get('video_name', os.path.splitext(
+                        os.path.basename(json_file))[0])
+
+                    # Only use enhanced analysis if no regular analysis exists
+                    if video_name not in self.results_cache:
+                        # Convert enhanced analysis structure to regular structure for template compatibility
+                        converted_data = self.convert_enhanced_to_regular_format(
+                            data)
+                        self.results_cache[video_name] = converted_data
+            except Exception as e:
+                print(f"Error loading {json_file}: {e}")
+
         return self.results_cache
+
+    def convert_enhanced_to_regular_format(self, enhanced_data):
+        """Convert enhanced analysis format to regular format for template compatibility"""
+        try:
+            # Extract traditional analysis data
+            traditional = enhanced_data.get('traditional_analysis', {})
+
+            # Create a regular format structure
+            regular_data = {
+                'video_name': enhanced_data.get('video_name', 'unknown'),
+                'timestamp': enhanced_data.get('timestamp', ''),
+                'audio_analysis': traditional,
+                'visual_analysis': {
+                    'duration': 0,
+                    'dominant_activity': 'Unknown',
+                    'avg_movement': 0,
+                    'avg_brightness': 0
+                },
+                'combined_interpretation': {
+                    'overall_mood': enhanced_data.get('enhanced_interpretation', {}).get('overall_behavior', 'Unknown'),
+                    'behavior_pattern': enhanced_data.get('enhanced_interpretation', {}).get('behavioral_complexity', 'Unknown'),
+                    'confidence': enhanced_data.get('confidence_assessment', {}).get('recommendation', 'Unknown'),
+                    'recommendations': enhanced_data.get('comprehensive_recommendations', [])
+                }
+            }
+
+            # Try to extract duration from acoustic metrics if available
+            if traditional and 'acoustic_metrics' in traditional:
+                duration_ms = traditional['acoustic_metrics'].get(
+                    'duration_ms', 0)
+                # Convert to seconds
+                regular_data['visual_analysis']['duration'] = duration_ms / 1000.0
+
+            return regular_data
+
+        except Exception as e:
+            print(f"Error converting enhanced format: {e}")
+            # Return a minimal structure if conversion fails
+            return {
+                'video_name': enhanced_data.get('video_name', 'unknown'),
+                'timestamp': enhanced_data.get('timestamp', ''),
+                'audio_analysis': {'primary_meaning': 'Analysis unavailable', 'emotional_state': 'Unknown', 'urgency_level': 'Unknown', 'confidence': 'Low'},
+                'visual_analysis': {'duration': 0, 'dominant_activity': 'Unknown', 'avg_movement': 0, 'avg_brightness': 0},
+                'combined_interpretation': {'overall_mood': 'Unknown', 'behavior_pattern': 'Unknown', 'confidence': 'Low', 'recommendations': []}
+            }
 
     def create_download_package(self):
         """Create a ZIP file with all analysis results"""

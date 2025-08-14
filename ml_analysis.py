@@ -155,12 +155,20 @@ class AdvancedCatBehaviorAnalyzer:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 frames.append(gray)
 
-                # Calculate optical flow
+                # Calculate optical flow using Farneback method
                 if prev_gray is not None:
-                    flow = cv2.calcOpticalFlowPyrLK(
-                        prev_gray, gray, None, None)
-                    if flow[0] is not None:
-                        optical_flows.append(np.mean(np.abs(flow[0])))
+                    try:
+                        flow = cv2.calcOpticalFlowFarneback(
+                            prev_gray, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+                        if flow is not None:
+                            # Calculate magnitude of flow vectors
+                            magnitude = np.sqrt(
+                                flow[..., 0]**2 + flow[..., 1]**2)
+                            optical_flows.append(np.mean(magnitude))
+                    except Exception as e:
+                        # If optical flow fails, use simple frame difference
+                        diff = cv2.absdiff(prev_gray, gray)
+                        optical_flows.append(np.mean(diff))
 
                 prev_gray = gray
                 frame_count += 1

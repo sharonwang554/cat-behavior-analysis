@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import librosa
 import librosa.display
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import os
 import glob
 from datetime import datetime
@@ -54,7 +54,7 @@ class CatVideoAnalyzer:
                 return None
 
             # Save audio as WAV file
-            audio.write_audiofile(audio_output, verbose=False, logger=None)
+            audio.write_audiofile(audio_output, logger=None)
 
             # Clean up
             audio.close()
