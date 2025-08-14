@@ -197,7 +197,7 @@
       <div class="result-item">
         <span class="result-label">Audio Emotion:</span>
         <span
-          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
         >
           {{ result['audio_analysis']['emotional_state'] }}
         </span>
@@ -215,7 +215,7 @@
       <div class="result-item">
         <span class="result-label">Urgency Level:</span>
         <span
-          class="status-badge status-{{ 'high' if result['audio_analysis']['urgency_level'] == 'High' else 'medium' if result['audio_analysis']['urgency_level'] == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['urgency_level'] else 'medium' if 'Medium' in result['audio_analysis']['urgency_level'] else 'low' }}"
         >
           {{ result['audio_analysis']['urgency_level'] }}
         </span>
@@ -224,7 +224,7 @@
       <div class="result-item">
         <span class="result-label">Confidence:</span>
         <span
-          class="status-badge status-{{ 'high' if result['audio_analysis']['confidence'] == 'High' else 'medium' if result['audio_analysis']['confidence'] == 'Medium' else 'low' }}"
+          class="status-badge status-{{ 'high' if 'High' in result['audio_analysis']['confidence'] else 'medium' if 'Medium' in result['audio_analysis']['confidence'] else 'low' }}"
         >
           {{ result['audio_analysis']['confidence'] }}
         </span>

@@ -658,6 +658,11 @@ def interpret_meow(duration, avg_pitch, pitch_variation, avg_loudness,
         vocal_health = "rough"
         if emotional_state not in ["Distressed/Unwell"]:
             emotional_state = "Stressed/Strained"
+            # Update primary meaning to be consistent with stressed state
+            if "Friendly request" in interpretation['primary_meaning']:
+                interpretation['primary_meaning'] = "Stressed vocalization with underlying request"
+            elif "Normal social communication" in interpretation['primary_meaning']:
+                interpretation['primary_meaning'] = "Stressed communication attempt"
     elif zcr > 0.04:
         interpretation['details'].append(
             f"Slightly rough voice texture (ZCR: {zcr:.3f}) - Minor vocal roughness within normal range. May indicate mild excitement or normal vocal variation.")
