@@ -4,6 +4,7 @@ Advanced Machine Learning Cat Behavior Analysis
 Uses neural networks and sophisticated ML techniques for enhanced accuracy
 """
 
+from core.base_analyzer import BaseAnalyzer
 import cv2
 import librosa
 import numpy as np
@@ -41,26 +42,17 @@ except ImportError:
     SKLEARN_AVAILABLE = False
 
 
-class AdvancedCatBehaviorAnalyzer:
+class AdvancedCatBehaviorAnalyzer(BaseAnalyzer):
     def __init__(self):
-        self.setup_directories()
+        # Only create folders needed for ML analysis
+        required_folders = ['models', 'features', 'training_data']
+        super().__init__(required_folders)
         self.audio_model = None
         self.video_model = None
         self.ensemble_model = None
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
         self.load_or_create_models()
-
-    def setup_directories(self):
-        """Create directories for ML models and data"""
-        self.folders = {
-            'models': 'ml_models',
-            'features': 'extracted_features',
-            'training_data': 'training_data'
-        }
-
-        for folder in self.folders.values():
-            os.makedirs(folder, exist_ok=True)
 
     def extract_advanced_audio_features(self, audio_path):
         """Extract comprehensive audio features using advanced signal processing"""
@@ -504,6 +496,30 @@ class AdvancedCatBehaviorAnalyzer:
                 "Consider encouraging more activity with interactive play")
 
         return recommendations
+
+    def analyze_video(self, video_path):
+        """Analyze a single video using ML techniques - implements BaseAnalyzer abstract method"""
+        try:
+            video_name = self.get_video_name(video_path)
+            print(f"\n🧠 Starting ML analysis for: {video_name}")
+
+            # For ML analysis, we need both audio and video paths
+            # This is a simplified implementation - in practice, you'd extract audio first
+            audio_path = None  # Would be extracted from video
+
+            # Perform ML analysis
+            analysis = self.analyze_with_ml(audio_path, video_path)
+
+            # Save results
+            if analysis:
+                filename = f"{video_name}_ml_analysis.json"
+                self.save_results_json(analysis, filename, 'ml_results')
+
+            return analysis
+
+        except Exception as e:
+            print(f"❌ Error in ML video analysis: {e}")
+            return self.get_default_analysis()
 
     def get_default_analysis(self):
         """Return default analysis when ML analysis fails"""

@@ -1,10 +1,11 @@
 from analysis import analyze_cat_meow, interpret_meow, print_analysis_results
+from core.base_analyzer import BaseAnalyzer
+from core.audio_extractor import UnifiedAudioExtractor
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import librosa
 import librosa.display
-from moviepy import VideoFileClip
 import os
 import glob
 from datetime import datetime
@@ -12,60 +13,20 @@ import json
 import warnings
 warnings.filterwarnings('ignore')
 
-# Import functions from existing analysis.py
 
+class CatVideoAnalyzer(BaseAnalyzer):
+    """Traditional cat video analyzer with audio and visual analysis"""
 
-class CatVideoAnalyzer:
     def __init__(self):
-        self.setup_directories()
-
-    def setup_directories(self):
-        """Create organized folder structure"""
-        self.folders = {
-            'audio': 'extracted_audio',
-            'audio_graphs': 'audio_analysis_graphs',
-            'videos': 'input_videos',
-            'video_results': 'video_analysis_results',
-            'combined_results': 'combined_analysis_results'
-        }
-
-        for folder in self.folders.values():
-            os.makedirs(folder, exist_ok=True)
-
-        print("📁 Created folder structure:")
-        for name, path in self.folders.items():
-            print(f"  {name}: {path}/")
+        # Only create folders needed for traditional analysis
+        required_folders = ['audio', 'audio_graphs',
+                            'videos', 'video_results', 'combined_results']
+        super().__init__(required_folders)
+        self.audio_extractor = UnifiedAudioExtractor()
 
     def extract_audio_from_video(self, video_path):
-        """Extract audio from video file and save to audio folder"""
-        try:
-            video_name = os.path.splitext(os.path.basename(video_path))[0]
-            audio_output = os.path.join(
-                self.folders['audio'], f"{video_name}_audio.wav")
-
-            print(f"🎵 Extracting audio from {video_path}...")
-
-            # Load video and extract audio
-            video = VideoFileClip(video_path)
-            audio = video.audio
-
-            if audio is None:
-                print(f"❌ No audio track found in {video_path}")
-                return None
-
-            # Save audio as WAV file
-            audio.write_audiofile(audio_output, logger=None)
-
-            # Clean up
-            audio.close()
-            video.close()
-
-            print(f"✅ Audio extracted to: {audio_output}")
-            return audio_output
-
-        except Exception as e:
-            print(f"❌ Error extracting audio from {video_path}: {e}")
-            return None
+        """Extract audio from video file using unified extractor"""
+        return self.audio_extractor.extract_audio(video_path, self.folders['audio'])
 
     def analyze_video_frames(self, video_path):
         """Analyze cat body language and movement in video frames"""
