@@ -13,6 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import glob
+import shutil
+import subprocess
 from datetime import datetime
 import json
 
@@ -50,8 +52,12 @@ class SimpleCatVideoAnalyzer:
 
             print(f"🎵 Extracting audio from {video_path}...")
 
-            # Use ffmpeg command directly
-            import subprocess
+            # Check if ffmpeg is available
+            if not shutil.which('ffmpeg'):
+                print("❌ FFmpeg not found. Please install FFmpeg to extract audio.")
+                print("💡 Install FFmpeg: https://ffmpeg.org/download.html")
+                return None
+
             cmd = [
                 'ffmpeg', '-i', video_path,
                 '-vn', '-acodec', 'pcm_s16le',

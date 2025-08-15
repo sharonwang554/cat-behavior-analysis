@@ -290,10 +290,6 @@ This is an open-source project. Feel free to:
 - Submit pull requests
 - Share your analysis results
 
-## 📄 License
-
-Open source - feel free to use, modify, and distribute.
-
 ---
 
 **Made with ❤️ for cat lovers and their feline friends** 🐱

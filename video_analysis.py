@@ -80,7 +80,7 @@ class CatVideoAnalyzer:
             # Get video properties
             fps = cap.get(cv2.CAP_PROP_FPS)
             frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            duration = frame_count / fps
+            duration = frame_count / fps if fps > 0 else 0
 
             # Initialize analysis variables
             movement_data = []
@@ -123,8 +123,8 @@ class CatVideoAnalyzer:
             cap.release()
 
             # Calculate timestamps for sampled frames
-            timestamps = [i * sample_rate /
-                          fps for i in range(len(brightness_data))]
+            timestamps = [
+                i * sample_rate / fps for i in range(len(brightness_data))] if fps > 0 else []
 
             visual_analysis = {
                 'duration': duration,

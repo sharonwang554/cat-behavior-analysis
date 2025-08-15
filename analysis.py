@@ -104,8 +104,7 @@ def analyze_cat_meow(file_path):
     plt.tight_layout()
 
     # Save the plot to the project folder
-    base_name = file_path.split(
-        '/')[-1].replace('.m4a', '').replace('.wav', '').replace('.mp3', '')
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
     output_filename = f"meow_analysis_{base_name}.png"
     plt.savefig(output_filename, dpi=300, bbox_inches='tight')
     print(f"Analysis graph saved as: {output_filename}")
